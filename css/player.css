@@ -11,7 +11,7 @@
 /**
  * Reset github screen.css style
  */
-.player img {
+.player img {
     max-width: inherit!important;
     -webkit-box-shadow: none!important;
     -moz-box-shadow: none!important;
