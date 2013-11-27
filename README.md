@@ -40,4 +40,4 @@ You might also set the playlist through the album by adding songs :
 
 Add/remove song method
 
-Built for [ezseed2](github.com/soyuka/ezseed2)
+Built for [ezseed2](http://github.com/soyuka/ezseed2)
