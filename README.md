@@ -2,6 +2,8 @@ Based on a [DGPlayer Fork](https://github.com/audiocogs/dgplayer) combined with 
 
 Pure javascript, [underscore](http://underscorejs.org/#template) is used for templating the playlist
 
+[Demo here](http://soyu​ka.github.io​/audiocogs/)
+
 ### Playlist usage
 
 Just pass into `DGPlayer.playist` an array of songs :
