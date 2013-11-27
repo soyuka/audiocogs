@@ -47,8 +47,10 @@ function DGPlayer(root) {
                 oldSeconds = Math.floor(currentTime / 1000 % 60);;
                 currentTime = time;
                 
-                if (currentTime >= trackLength && trackLength > 0)
+                if (currentTime >= trackLength && trackLength > 0) {
                     emit("pause");
+                    emit("trackends");
+                }
 
                 var t = currentTime / 1000,
                     seconds = Math.floor(t % 60),
@@ -337,7 +339,7 @@ function DGPlayer(root) {
      * Playlist
      */
     
-    var songs, current, track, $playlist = root.querySelector("#playlist");
+    var songs = [], current, track, $playlist = root.querySelector("#playlist");
 
     var onSongClick = function(evt) {
 
@@ -380,7 +382,7 @@ function DGPlayer(root) {
             if(active)
                 active.classList.remove("active");
 
-            if(songs)
+            if(songs.length)
                 $playlist.querySelector("li[data-no='"+track+"']").classList.add('active');
         }
 
@@ -400,6 +402,20 @@ function DGPlayer(root) {
 
         //Set active on play
         API.on('play', setActivePlaylist);
+
+        //Set next on ends
+        API.on('trackends', function() {
+            var previous = API.current;
+
+            API.current = track + 1 < songs.length ? track + 1 : track;
+            
+            if(API.current == previous)
+                emit("pause");
+            else {
+                setActivePlaylist();
+                emit("playlist");
+            }
+        });
 
         prev.onclick = function(evt) {
             API.current = track - 1 >= 0 ? track - 1 : track;
@@ -514,7 +530,7 @@ function DGPlayer(root) {
                 songs.splice(i, 1);
 
                 var songElement = $playlist.querySelector("li[data-no='"+i+"']");
-                
+
                 songElement.removeEventListener('click', onSongClick);
 
                 $playlist.querySelector("ol").removeChild(songElement);
