@@ -36,8 +36,21 @@ You might also set the playlist through the album by adding songs :
 
 ```
 
-### Todo
+### Adding, removing songs
 
-Add/remove song method
+#### Adding :
+```
+	DGPlayer.addSong =  {
+                "name":"Jeux de vagues",
+                "url":"medias/BIS1447-002-mp3_320.mp3",
+                "picture" : "medias/debussy.jpg"
+            };
+```
+
+#### Removing : just give the song index, or `data-no` attribute
+
+```
+    DGPlayer.removeSong = 2; //dummy example ofc
+```
 
 Built for [ezseed2](http://github.com/soyuka/ezseed2)
