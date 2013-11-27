@@ -14,6 +14,11 @@
     </style>
 </head>
 <body>
+    <div style="width:200px;margin:20px auto;">
+        <a href="#" class="add-song">Add song</a>
+        <a href="#" class="remove-song">Remove song</a>
+    </div>
+
     <div class="player" id="dgplayer" tabindex="0">
         <div class="cf player-item">
             <div class="avatar">
@@ -103,6 +108,19 @@
     }());
 
     (function(DGPlayer) {
+        var add = document.querySelector('.add-song'), remove = document.querySelector('.remove-song');
+
+        add.onclick = function() {
+            DGPlayer.addSong =  {
+                "name":"Jeux de vagues",
+                "url":"medias/BIS1447-002-mp3_320.mp3",
+                "picture" : "medias/debussy.jpg"
+            };
+        }
+
+        remove.onclick = function() {
+            DGPlayer.removeSong = 2; //dummy example ofc
+        }
 
         DGPlayer.album = album;
             

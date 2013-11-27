@@ -337,11 +337,30 @@ function DGPlayer(root) {
      * Playlist
      */
     
-    var songs, current, track;
+    var songs, current, track, $playlist = root.querySelector("#playlist");
+
+    var onSongClick = function(evt) {
+
+        evt.preventDefault();    
+
+        var no = evt.target.parentElement.dataset.no;
+
+        var active = $playlist.querySelector("li.active");
+
+        if(active)
+            active.classList.remove("active");
+
+        evt.target.parentElement.classList.add("active");
+
+        API.current = no;
+
+        emit("playlist");
+
+    }
+
 
     var playlist = function() {
-        var $playlist = root.querySelector("#playlist")
-        , playlistLoaded = false
+        var playlistLoaded = false
         , prev = root.querySelector(".button-prev")
         , next = root.querySelector(".button-next")
         , showlist = root.querySelector(".button-playlist")
@@ -353,7 +372,7 @@ function DGPlayer(root) {
                    + "<li data-no='<%= i %>'><a href=''><%= song.name %></a></li>"
                    + "<% } %>"
                    + "</ol>"
-                   ;
+        ;
 
         var setActivePlaylist = function() {
             var active = $playlist.querySelector("li.active");
@@ -362,11 +381,25 @@ function DGPlayer(root) {
                 active.classList.remove("active");
 
             if(songs)
-                $playlist.querySelector("li:nth-child("+(track + 1)+")").classList.add('active');
+                $playlist.querySelector("li[data-no='"+track+"']").classList.add('active');
         }
 
-        API.on('play', setActivePlaylist);
+        /**
+         * loadElements - load playlist items, templating
+         */
+        var loadElements = function() {
 
+            var listElements = $playlist.querySelectorAll("li");
+
+            for (var i = 0; i < listElements.length; i++)
+                listElements[i].onclick = onSongClick;
+
+            playlistLoaded = true;
+          
+        };
+
+        //Set active on play
+        API.on('play', setActivePlaylist);
 
         prev.onclick = function(evt) {
             API.current = track - 1 >= 0 ? track - 1 : track;
@@ -384,38 +417,6 @@ function DGPlayer(root) {
             this.classList.toggle('active');
             $playlist.classList.toggle('show');
         }
-
-
-        var loadElements = function() {
-
-            var listElements = $playlist.querySelectorAll("li");
-
-            for (var i = 0; i < listElements.length; i++) {
-
-                //Onclick evt
-                listElements[i].onclick = function(evt) {
-
-                    evt.preventDefault();    
-
-                    var no = evt.target.parentElement.dataset.no;
-
-                    var active = $playlist.querySelector("li.active");
-
-                    if(active)
-                        active.classList.remove("active");
-
-                    evt.target.parentElement.classList.add("active");
-
-                    API.current = no;
-
-                    emit("playlist");
-
-                }
-            }
-
-            playlistLoaded = true;
-          
-        };
 
         return {
             getValue: function() {
@@ -478,6 +479,58 @@ function DGPlayer(root) {
     });
 
 
+    Object.defineProperty(API, "addSong", {
+        get: function() {
+            return false;
+        },
+        set: function(song) {            
+            songs.push(song);
+
+            var i = songs.length - 1, songTemplate = "<li data-no='<%= i %>'><a href=''><%= song.name %></a></li>";
+
+            //Dummy element
+            var dummy = document.createElement('div');
+            dummy.innerHTML = _.template(songTemplate, {i : i, song : song});
+            dummy = dummy.firstChild;
+
+            dummy.onclick = onSongClick;
+
+            $playlist.querySelector("ol").appendChild(dummy);
+
+            delete dummy;
+        }
+    });
+
+    Object.defineProperty(API, "removeSong", {
+        get: function() {
+            return false;
+        },
+        set: function(i) {
+            if(songs[i]) {
+
+                if(current == songs[i])
+                    emit("pause"); //stop
+
+                songs.splice(i, 1);
+
+                var songElement = $playlist.querySelector("li[data-no='"+i+"']");
+                
+                songElement.removeEventListener('click', onSongClick);
+
+                $playlist.querySelector("ol").removeChild(songElement);
+
+                //reset data-no
+                var elements = $playlist.querySelectorAll("ol > li");
+
+                for(var j in elements)
+                    if(elements[j].dataset)
+                        elements[j].dataset.no = j;
+                
+                
+            } else
+                console.error("Song doesn't exist");
+        }
+    });
     
     return API;
     
