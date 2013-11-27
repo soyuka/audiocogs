@@ -12,7 +12,7 @@
  * Reset github screen.css style
  */
 .player img {
-    max-width: auto!important;
+    max-width: inherit!important;
     -webkit-box-shadow: none!important;
     -moz-box-shadow: none!important;
     box-shadow: none!important;
