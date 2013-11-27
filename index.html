@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="css/icon-font.css">
+    <link rel="stylesheet" href="css/player.css">
+    <!--[if IE 9]>
+    <script src="js/classlist.js"></script>
+    <![endif]-->
+    <style>
+    body {
+        background: url(img/bg.png);
+        margin: 0;
+    }
+    </style>
+</head>
+<body>
+    <div class="player" id="dgplayer" tabindex="0">
+        <div class="cf player-item">
+            <div class="avatar">
+                <img src="img/avatar.jpeg">
+            </div>
+
+            <div style="float:left;max-width: 300px;">
+                <span class="title">Unknown Title</span>
+                <span class="artist">Unknown Artist</span>
+
+                <div class="seek">
+                    <span>0:00</span>
+                    <div class="track">
+                        <div class="loaded"></div>
+                        <div class="progress"></div>
+                    </div>
+                    <span>-0:00</span>
+                </div>
+                <div class="controls">
+                    <div class="button-prev"><i class="entypo-fast-backward"></i></div>
+                    <div class="button"><i class="entypo-play"></i></div>
+                    <div class="button-next"><i class="entypo-fast-forward"></i></div>
+
+
+                    <div class="volume">
+                       <img src="img/volume_low.png">
+                        <div class="track">
+                            <div class="progress" style="height: 60px;"></div>
+                            <div class="handle" style="-webkit-transform: translate3d(0, -52px, 0);"></div>
+                        </div>
+                        <img src="img/volume_high.png">
+                    </div>
+
+                    <div class="button-playlist"><i class="entypo-numbered-list"></i></div>
+
+                </div>
+            </div>
+
+        </div>
+        
+        <div id="playlist">
+        
+        </div>
+
+    </div>
+
+    <a style="color:white; position:absolute; bottom:0; left: 10px;" href="http://www.eclassical.com/pages/24-bit-faq.html">Audio samples source</a>
+
+    <script src="http://underscorejs.org/underscore-min.js"></script>
+
+    <script src="audiocogs/aurora.js"></script>
+    <script src="audiocogs/flac.js"></script>
+    <script src="audiocogs/mp3.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/DGAuroraPlayer.js"></script>
+    <script>
+    // Test data
+    var album = 
+    {   "artist":"H. Purcell",
+        "album":"Soprano and baroque ensemble",
+        "picture":"img/avatar.jpeg",
+        "songs":[
+            {
+                "name":"Sweeter than roses",
+                "url":"medias/BIS1536-001-flac_16.flac"
+            },
+            {
+                "name":"Jeux de vagues",
+                "url":"medias/BIS1447-002-mp3_320.mp3",
+                "picture" : "medias/debussy.jpg"
+            }
+
+        ]
+    };
+    </script>
+    <script>
+
+    // Chrome doesn't support changing the sample rate, and uses whatever the hardware supports.
+    // We cheat here.  Instead of resampling on the fly, we're currently just loading two different
+    // files based on common hardware sample rates.
+    var _sampleRate = (function() {
+        var AudioContext = (window.AudioContext || window.webkitAudioContext);
+        if (!AudioContext)
+            return 44100;
+        
+        return new AudioContext().sampleRate;
+    }());
+
+    (function(DGPlayer) {
+
+        DGPlayer.album = album;
+            
+        DGPlayer.volume = 100;
+        
+        var player, onplay;
+        
+        DGPlayer.on('play', onplay = function(){
+            if (player)
+                player.disconnect();
+                
+            player = new DGAuroraPlayer(AV.Player.fromURL(DGPlayer.current.url), DGPlayer);
+            DGPlayer.off('play', onplay);
+        });
+
+
+        DGPlayer.on('playlist', onplaylist = function() {
+            if(player) {
+                player.disconnect();
+
+                DGPlayer.state = 'paused';
+            }
+
+            player = new DGAuroraPlayer(AV.Player.fromURL(DGPlayer.current.url), DGPlayer);
+
+        });
+
+
+    })(DGPlayer(document.getElementById('dgplayer')));
+
+       
+    </script>
+</body>
+</html>
