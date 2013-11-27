@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=640" />
+
+    <link rel="stylesheet" href="stylesheets/core.css" media="screen"/>
+    <link rel="stylesheet" href="stylesheets/mobile.css" media="handheld, only screen and (max-device-width:640px)"/>
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css"/>
+
+    <script type="text/javascript" src="javascripts/modernizr.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="javascripts/headsmart.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $('#main_content').headsmart()
+      })
+    </script>
+    <title>Audiocogs by soyuka</title>
+  </head>
+
+  <body>
+    <a id="forkme_banner" href="https://github.com/soyuka/audiocogs">View on GitHub</a>
+    <div class="shell">
+
+      <header>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <h1>Audiocogs</h1>
+            <h2>Fork from audiocogs - DGPlayer which reads MP3 and FLAC - with playlist integration</h2>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+      </header>
+
+      <section id="downloads">
+        <span class="inner">
+          <a href="https://github.com/soyuka/audiocogs/zipball/master" class="zip"><em>download</em> .ZIP</a><a href="https://github.com/soyuka/audiocogs/tarball/master" class="tgz"><em>download</em> .TGZ</a>
+        </span>
+      </section>
+
+
+      <span class="banner-fix"></span>
+
+
+      <section id="main_content">
+        <p>Based on a <a href="https://github.com/audiocogs/dgplayer">DGPlayer Fork</a> combined with <a href="https://github.com/audiocogs/aurora.js">audiocogs aurora</a> with <a href="https://github.com/audiocogs/flac.js">FLAC</a> and <a href="https://github.com/audiocogs/mp3.js">MP3</a></p>
+
+<p>Pure javascript, <a href="http://underscorejs.org/#template">underscore</a> is used for templating the playlist</p>
+
+<h3>
+<a name="playlist-usage" class="anchor" href="#playlist-usage"><span class="octicon octicon-link"></span></a>Playlist usage</h3>
+
+<p>Just pass into <code>DGPlayer.playist</code> an array of songs :</p>
+
+<pre><code>    DGPlayer.playlist = [
+                            {name : "Song1 name", url : "http://localhost/media/mySong.mp3"}, 
+                            {name : "Song2 name", url : "http://localhost/media/mySong.flac"}
+                        ];
+</code></pre>
+
+<h3>
+<a name="album-usage" class="anchor" href="#album-usage"><span class="octicon octicon-link"></span></a>Album usage</h3>
+
+<p>If you want to play an album, just pass artist, album and cover to <code>DGPlayer.album</code> :</p>
+
+<pre><code>    DGPlayer.album = {artist : 'Artist', album : 'Album', picture : 'http://localhost/img/avatar.jpeg'};
+</code></pre>
+
+<p>You might also set the playlist through the album by adding songs :</p>
+
+<pre><code>    DGPlayer.album = {
+                        artist : 'Artist', 
+                        album : 'Album', 
+                        picture : 'http://localhost/img/avatar.jpeg', 
+                        songs : [
+                            {name : "Song1 name", url : "http://localhost/media/mySong.mp3"}, 
+                            {name : "Song2 name", url : "http://localhost/media/mySong.flac"}
+                        ]
+                    };
+
+</code></pre>
+
+<h3>
+<a name="adding-removing-songs" class="anchor" href="#adding-removing-songs"><span class="octicon octicon-link"></span></a>Adding, removing songs</h3>
+
+<h4>
+<a name="adding-" class="anchor" href="#adding-"><span class="octicon octicon-link"></span></a>Adding :</h4>
+
+<pre><code>    DGPlayer.addSong =  {
+                "name":"Jeux de vagues",
+                "url":"medias/BIS1447-002-mp3_320.mp3",
+                "picture" : "medias/debussy.jpg"
+            };
+</code></pre>
+
+<h4>
+<a name="removing--just-give-the-song-index-or-data-no-attribute" class="anchor" href="#removing--just-give-the-song-index-or-data-no-attribute"><span class="octicon octicon-link"></span></a>Removing : just give the song index, or <code>data-no</code> attribute</h4>
+
+<pre><code>    DGPlayer.removeSong = 2; //dummy example ofc
+</code></pre>
+
+<p>Built for <a href="http://github.com/soyuka/ezseed2">ezseed2</a></p>
+      </section>
+
+      <footer>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <p>this project by <a href="https://github.com/soyuka">soyuka</a> can be found on <a href="https://github.com/soyuka/audiocogs">GitHub</a></p>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+        <p>Generated with <a href="http://pages.github.com">GitHub Pages</a> using Merlot</p>
+        <span class="octocat"></span>
+      </footer>
+
+    </div>
+
+    
+  </body>
+</html>
