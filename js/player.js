@@ -335,35 +335,47 @@ function DGPlayer(root) {
         }
     });
     
-        /**
+    /**
      * Playlist
      */
     
-    var songs = [], current, track, $playlist = root.querySelector("#playlist");
+    var songs = [] //stores the songs array
+      , current //stores the current song
+      , track //stores the active track number
+      , playlistLoaded = false
+      , $playlist = root.querySelector("#playlist")
+      //On Song click
+      , onSongClick = function(evt) {
 
-    var onSongClick = function(evt) {
+            evt.preventDefault();    
 
-        evt.preventDefault();    
+            var no = evt.target.parentElement.dataset.no;
 
-        var no = evt.target.parentElement.dataset.no;
+            var active = $playlist.querySelector("li.active");
 
-        var active = $playlist.querySelector("li.active");
+            if(active)
+                active.classList.remove("active");
 
-        if(active)
-            active.classList.remove("active");
+            evt.target.parentElement.classList.add("active");
 
-        evt.target.parentElement.classList.add("active");
+            API.current = no;
 
-        API.current = no;
+            emit("playlist");
 
-        emit("playlist");
+        }
+      //Change current active class to current track
+      , setActivePlaylist = function() {
+            var active = $playlist.querySelector("li.active");
 
-    }
+            if(active)
+                active.classList.remove("active");
 
+            if(songs.length)
+                $playlist.querySelector("li[data-no='"+track+"']").classList.add('active');
+        }
 
     var playlist = function() {
-        var playlistLoaded = false
-        , prev = root.querySelector(".button-prev")
+        var prev = root.querySelector(".button-prev")
         , next = root.querySelector(".button-next")
         , showlist = root.querySelector(".button-playlist")
         , playlistTemplate = 
@@ -375,16 +387,6 @@ function DGPlayer(root) {
                    + "<% } %>"
                    + "</ol>"
         ;
-
-        var setActivePlaylist = function() {
-            var active = $playlist.querySelector("li.active");
-
-            if(active)
-                active.classList.remove("active");
-
-            if(songs.length)
-                $playlist.querySelector("li[data-no='"+track+"']").classList.add('active');
-        }
 
         /**
          * loadElements - load playlist items, templating
@@ -439,15 +441,28 @@ function DGPlayer(root) {
                 return songs;
             },
             setValue: function(datas) {
-                if(!playlistLoaded) {
-                    songs = datas;
+                var albumEnd = songs.length;
+                
+                songs = _.union(songs, datas);
+
+                $playlist.innerHTML = _.template(playlistTemplate, {songs : songs});
+
+                loadElements();
+
+                console.log(songs.length, albumEnd);
+
+                if(albumEnd !== 0 && songs.length > albumEnd) {
+                    track = albumEnd;
+                    current = songs[track];
+                    emit("playlist");
+                } else if(albumEnd == songs.length) {
+                    //Hmm, playlist is firing twice, can't trace it ...
+                } else {
                     track = 0;
-                    current = datas[track];
-
-                    $playlist.innerHTML = _.template(playlistTemplate, {songs : datas});
-
-                    loadElements();
+                    current = songs[track];
                 }
+                setActivePlaylist();
+
             }
         }
 
